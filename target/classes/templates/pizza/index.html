@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ita" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista pizze</title>
+  </head>
+
+  <body>
+    <main>
+      <h1>Lista pizze</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Descrizione</th>
+            <th>Img_Url</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="pizza : ${pizzas}">
+            <td scope="row">[[id]]</td>
+            <td>[[${pizza.name}]]</td>
+            <td>[[${pizza.description}]]</td>
+            <td>[[${pizza.imgUrl}]]</td>
+            <td>[[${pizza.price}]]</td>
+     		<td><a th:href="@{/pizza/{id} (id=${pizza.id})}">Show</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>
