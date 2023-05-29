@@ -1,0 +1,36 @@
+<form
+  method="POST"
+  th:fragment="form(btnText , pizza)"
+  th:action="@{/pizzas/create}"
+  th:object="${pizza}"
+>
+  <input
+    type="text"
+    name="name"
+    th:field="*{name}"
+    placeholder="Inserisci nome"
+    modelAttribute="pizza"
+  />
+  <textarea
+    name="description"
+    th:field="*{description}"
+    id=""
+    cols="30"
+    rows="10"
+    placeholder="Inserisci descrizione"
+  ></textarea>
+  <input
+    type="text"
+    name="imgUrl"
+    th:field="*{imgUrl}"
+    placeholder="Inserisci l'url dell'immagine"
+  />
+  <input
+    type="number"
+    name="price"
+    th:field="*{price}"
+    placeholder="Inserisci il prezzo"
+  />
+
+  <button type="submit">[[${btnText}]]</button>
+</form>

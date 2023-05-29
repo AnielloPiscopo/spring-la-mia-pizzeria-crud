@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="ita" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista pizze</title>
-  </head>
+  <head th:replace="~{pizza/frag/main-layout :: head(${title})}"> </head>
 
   <body>
     <main>
@@ -15,6 +10,9 @@
           <input type="text" name="name" />
           <button type="submit">Filtra</button>
         </form>
+        <div class="my_btn-container">
+          <a th:href="@{/pizzas/create}">Create new pizza</a>
+        </div>
       </div>
       <table th:unless="${pizzas.isEmpty()}">
         <thead>
@@ -29,12 +27,24 @@
 
         <tbody>
           <tr th:each="pizza : ${pizzas}" th:object="${pizza}">
-            <td scope="row">[[*{id}]]</td>
-            <td>[[*{name}]]</td>
-            <td>[[*{description}]]</td>
-            <td>[[*{imgUrl}]]</td>
-            <td>[[*{price}]] $</td>
-            <td><a th:href="@{/pizzas/{id} (id=${pizza.id})}">Show</a></td>
+            <td scope="row">
+              <span>[[*{id}]]</span>
+            </td>
+            <td>
+              <span>[[*{name}]]</span>
+            </td>
+            <td>
+              <span>[[*{description}]]</span>
+            </td>
+            <td>
+              <span>[[*{imgUrl}]]</span>
+            </td>
+            <td>
+              <span>[[*{price}]] $</span>
+            </td>
+            <td>
+              <a th:href="@{/pizzas/{id} (id=${pizza.id})}">Show</a>
+            </td>
           </tr>
         </tbody>
       </table>

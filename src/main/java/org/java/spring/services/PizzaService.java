@@ -16,16 +16,16 @@ public class PizzaService {
 	public List<Pizza> findAll() {
 			return pizzaRepo.findAll();
 	}
+	
 	public Pizza save(Pizza pizza) {
-		
 		return pizzaRepo.save(pizza);
 	}
+	
 	public Optional<Pizza> findById(int id) {
-		
 		return pizzaRepo.findById(id);
 	}
 	
-	public List<Pizza> findByName(String name) {
-		return pizzaRepo.findByName(name);
+	public List<Pizza> findByNameContaining(String name) {
+		return pizzaRepo.findByNameContaining(name);
 	}
 }
