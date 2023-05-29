@@ -77,6 +77,4 @@ public class Pizza {
 	public String toString() {
 		return getInfo();
 	}
-	
-	
 }

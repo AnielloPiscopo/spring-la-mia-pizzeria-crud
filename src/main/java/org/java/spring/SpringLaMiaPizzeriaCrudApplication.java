@@ -10,6 +10,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.github.javafaker.Faker;
+
 @SpringBootApplication
 public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner {
 	@Autowired
@@ -21,17 +23,23 @@ public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner {
 
 	public void run(String... args) throws Exception{
 		addToDb();
-//		Pizza p = new Pizza("asd" , "asd" , "ads" , 12.2f);
-//		pizzaService.save(p);
-		
 	}
 	
 	private List<Pizza> getPizzasList() {
+		Faker faker = new Faker();
+		int min = 1;
+		int max = 100;
+		int rndNumber = faker.number().numberBetween(min,max);
 		List<Pizza> pizzasList = new ArrayList<>();
-		pizzasList.add(new Pizza("asdasd" , "asd" , "asdadsads" , 21.2f));
-		pizzasList.add(new Pizza("asdasasdd" , "asasdd" , "asda2ddsads" , 21.2f));
-		pizzasList.add(new Pizza("asdasccxzd" , "ascdsddd" , "asdads3sads" , 212.2f));
-		pizzasList.add(new Pizza("asdahtrergdfsdasd" , "sdfasd" , "assdcdadsads" , 21.2f));
+		
+		for(int i=1 ; i<rndNumber ; i++) {
+			String rndName = faker.lorem().word();
+			String rndDescription = faker.lorem().sentence();
+			String rndImgUrl = faker.internet().image();
+			float rndPrice = (float) faker.number().randomDouble(2, min, max);
+			Pizza rndPizza = new Pizza(rndName , rndDescription , rndImgUrl , rndPrice);
+			pizzasList.add(rndPizza);
+		}
 		
 		return pizzasList;
 	}
