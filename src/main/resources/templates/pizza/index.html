@@ -10,7 +10,7 @@
   <body>
     <main>
       <h1>Lista pizze</h1>
-      <table class="table">
+      <table th:unless="${pizzas.isEmpty()}">
         <thead>
           <tr>
             <th>Id</th>
@@ -22,16 +22,18 @@
         </thead>
 
         <tbody>
-          <tr th:each="pizza : ${pizzas}">
-            <td scope="row">[[id]]</td>
-            <td>[[${pizza.name}]]</td>
-            <td>[[${pizza.description}]]</td>
-            <td>[[${pizza.imgUrl}]]</td>
-            <td>[[${pizza.price}]]</td>
-     		<td><a th:href="@{/pizzas/{id} (id=${pizza.id})}">Show</a></td>
+          <tr th:each="pizza : ${pizzas}" th:object="${pizza}">
+            <td scope="row">[[*{id}]]</td>
+            <td>[[*{name}]]</td>
+            <td>[[*{description}]]</td>
+            <td>[[*{imgUrl}]]</td>
+            <td>[[*{price}]] $</td>
+            <td><a th:href="@{/pizzas/{id} (id=${pizza.id})}">Show</a></td>
           </tr>
         </tbody>
       </table>
+      
+      <div th:if="${pizzas.isEmpty()}">Non ci sono elementi nella tabella</div>
     </main>
   </body>
 </html>
