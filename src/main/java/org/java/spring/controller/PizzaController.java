@@ -48,6 +48,7 @@ public class PizzaController {
 		Pizza pizza = optPizza.get();
 		pageTitle = "Pizza " + pizza.getName();
 		model.addAttribute("pizza" , pizza);
+		model.addAttribute("title" , pageTitle);
 		return "pizza/show";
 	}
 	
@@ -58,7 +59,7 @@ public class PizzaController {
 		String btnText = "Aggiungi alla lista delle pizze";
 		model.addAttribute("btnText" , btnText);
 		model.addAttribute("pizza", pizza);
-		model.addAttribute(pageTitle);
+		model.addAttribute("title" , pageTitle);
 		return "pizza/create";
 	}
 	

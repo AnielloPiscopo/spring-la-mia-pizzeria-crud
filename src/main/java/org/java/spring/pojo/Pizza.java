@@ -1,5 +1,7 @@
 package org.java.spring.pojo;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,9 +13,16 @@ public class Pizza {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@Nonnull
 	private String name;
+	
+	@Nullable
 	private String description;
+	
+	@Nullable
 	private String imgUrl;
+	
+	@Nonnull
 	private float price;
 	
 	public Pizza(){}
