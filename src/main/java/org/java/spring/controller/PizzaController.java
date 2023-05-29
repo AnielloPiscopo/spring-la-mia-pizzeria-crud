@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/pizzas")
@@ -20,8 +22,15 @@ public class PizzaController {
 	private PizzaService pizzaService;
 	
 	@GetMapping("/")
-	public String index(Model model) {
+	public String index(Model model ) {
 		List<Pizza> pizzas = pizzaService.findAll();
+		model.addAttribute("pizzas" , pizzas);
+		return "pizza/index";
+	}
+	
+	@PostMapping("/")
+	public String index(Model model , @RequestParam(name = "name") String name) {
+		List<Pizza> pizzas = (name.isBlank() ? pizzaService.findAll() : pizzaService.findByName(name));
 		model.addAttribute("pizzas" , pizzas);
 		return "pizza/index";
 	}

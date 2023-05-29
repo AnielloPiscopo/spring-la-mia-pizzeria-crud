@@ -9,7 +9,13 @@
 
   <body>
     <main>
-      <h1>Lista pizze</h1>
+      <div class="my_container">
+        <h1>Lista pizze</h1>
+        <form method="POST">
+          <input type="text" name="name" />
+          <button type="submit">Filtra</button>
+        </form>
+      </div>
       <table th:unless="${pizzas.isEmpty()}">
         <thead>
           <tr>
@@ -32,7 +38,7 @@
           </tr>
         </tbody>
       </table>
-      
+
       <div th:if="${pizzas.isEmpty()}">Non ci sono elementi nella tabella</div>
     </main>
   </body>
