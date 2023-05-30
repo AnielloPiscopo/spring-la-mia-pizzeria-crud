@@ -1,5 +1,6 @@
 package org.java.spring.controller;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,12 +9,15 @@ import org.java.spring.services.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/pizzas")
@@ -26,10 +30,22 @@ public class PizzaController {
 		return template;
 	}
 	
+	private String saveInDb(Pizza pizza , BindingResult br , String templateToEdit , String templateToRedirect , String title , String btnText , Model model) {
+		if(br.hasErrors()) {
+			model.addAttribute("pizza" , pizza);
+			model.addAttribute("errors" , br);
+			modifyOrCreatePizza(pizza, title, btnText, templateToRedirect, model);
+			return templateToEdit;
+		}
+		
+		pizzaService.save(pizza);
+		return templateToRedirect;
+	}
+	
 	private String modifyOrCreatePizza(Pizza pizza , String title , String btnText , String template , Model model) {
 		model.addAttribute("btnText" , btnText);
 		model.addAttribute("pizza", pizza);
-		model.addAttribute("title" , pageTitle);
+		model.addAttribute("title" , title);
 		return template;
 	}
 	
@@ -68,13 +84,12 @@ public class PizzaController {
 	
 	@GetMapping("/create")
 	public String create(Model model) {
-		return modifyOrCreatePizza(new Pizza() , "Creazione pizza" , "Aggiungi alla lista delle pizze" , "pizza/create" , model);
+		return modifyOrCreatePizza(new Pizza() , "Creazione pizza" , "Aggiungi alla lista la pizza" , "pizza/create" , model);
 	}
 	
 	@PostMapping("/create")
-	public String store(@ModelAttribute("pizza") Pizza pizza) {
-		pizzaService.save(pizza);
-		return "redirect:/pizzas/";
+	public String store(@Valid @ModelAttribute("pizza") Pizza pizza , BindingResult br , Model model) {
+		return saveInDb(pizza, br , "pizza/create" ,  "redirect:/pizzas/" , "Creazione pizza" , "Aggiungi alla lista la pizza" , model);
 	}
 	
 	@GetMapping("/edit/{id}")
@@ -86,9 +101,9 @@ public class PizzaController {
 	}
 	
 	@PostMapping("/edit/{id}")
-	public String update(@ModelAttribute("pizza") Pizza pizza) {
-		pizzaService.save(pizza);
-		return "redirect:/pizzas/" + pizza.getId();
+	public String update(@Valid @ModelAttribute("pizza") Pizza pizza , BindingResult br , Model model) {
+		pageTitle = "Modifica la pizza: " + pizza.getName();
+		return saveInDb(pizza, br , "pizza/edit" , "redirect:/pizzas/" + pizza.getId() , pageTitle , "Modifica elemento" , model);
 	}
 	
 	@PostMapping("/soft-delete/{id}")
