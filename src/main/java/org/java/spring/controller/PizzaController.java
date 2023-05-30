@@ -26,6 +26,21 @@ public class PizzaController {
 		return template;
 	}
 	
+	private String modifyOrCreatePizza(Pizza pizza , String title , String btnText , String template , Model model) {
+		model.addAttribute("btnText" , btnText);
+		model.addAttribute("pizza", pizza);
+		model.addAttribute("title" , pageTitle);
+		return template;
+	}
+	
+	private String changeTheDeletedValue(int id , boolean trashed) {
+		Optional<Pizza> optPizza = pizzaService.findById(id);
+		Pizza pizza = optPizza.get();
+		pizza.setDeleted(trashed);
+		pizzaService.save(pizza);
+		return "redirect:/pizzas/";
+	}
+	
 	@Autowired
 	private PizzaService pizzaService;
 	
@@ -53,13 +68,7 @@ public class PizzaController {
 	
 	@GetMapping("/create")
 	public String create(Model model) {
-		pageTitle = "Creazione pizza";
-		Pizza pizza = new Pizza();
-		String btnText = "Aggiungi alla lista delle pizze";
-		model.addAttribute("btnText" , btnText);
-		model.addAttribute("pizza", pizza);
-		model.addAttribute("title" , pageTitle);
-		return "pizza/create";
+		return modifyOrCreatePizza(new Pizza() , "Creazione pizza" , "Aggiungi alla lista delle pizze" , "pizza/create" , model);
 	}
 	
 	@PostMapping("/create")
@@ -72,12 +81,8 @@ public class PizzaController {
 	public String edit(Model model , @PathVariable("id") int id) {
 		Optional<Pizza> optPizza = pizzaService.findById(id);
 		Pizza pizza = optPizza.get();
-		String btnText = "Modifica elemento";
-		model.addAttribute("btnText" , btnText);
 		pageTitle = "Modifica la pizza: " + pizza.getName();
-		model.addAttribute("pizza" , pizza);
-		model.addAttribute("title" , pageTitle);
-		return "pizza/edit";
+		return modifyOrCreatePizza(pizza , pageTitle , "Modifica elemento" , "pizza/edit" , model);
 	}
 	
 	@PostMapping("/edit/{id}")
@@ -88,11 +93,7 @@ public class PizzaController {
 	
 	@PostMapping("/soft-delete/{id}")
 	public String softDelete(@PathVariable("id") int id) {
-		Optional<Pizza> optPizza = pizzaService.findById(id);
-		Pizza pizza = optPizza.get();
-		pizza.setDeleted(true);
-		pizzaService.save(pizza);
-		return "redirect:/pizzas/";
+		return changeTheDeletedValue(id, true);
 	}
 	
 	@PostMapping("/soft-delete-all")
@@ -119,11 +120,7 @@ public class PizzaController {
 	
 	@PostMapping("/refresh/{id}")
 	public String refresh(@PathVariable("id") int id) {
-		Optional<Pizza> optPizza = pizzaService.findById(id);
-		Pizza pizza = optPizza.get();
-		pizza.setDeleted(false);
-		pizzaService.save(pizza);
-		return "redirect:/pizzas/trash";
+		return changeTheDeletedValue(id, false);
 	}
 	
 	@PostMapping("/refresh-all")
