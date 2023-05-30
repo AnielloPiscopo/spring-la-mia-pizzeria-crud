@@ -25,6 +25,8 @@ public class PizzaController {
 	private static String pageTitle;
 	
 	private String getPizzas(List<Pizza> pizzas , String title , String template , Model model) {
+		DecimalFormat format = new DecimalFormat("0.#");
+		model.addAttribute("format", format);
 		model.addAttribute("pizzas" , pizzas);
 		model.addAttribute("title" , title);
 		return template;

@@ -33,7 +33,7 @@ public class SpringLaMiaPizzeriaCrudApplication implements CommandLineRunner {
 		List<Pizza> pizzasList = new ArrayList<>();
 		
 		for(int i=1 ; i<rndNumber ; i++) {
-			String rndName = String.join(", " , faker.lorem().words(min));
+			String rndName = String.join(", " , faker.lorem().words());
 			String rndDescription = faker.lorem().sentence(min);
 			String rndImgUrl = faker.internet().image();
 			float rndPrice = (float) faker.number().randomDouble(2, 1, max);
