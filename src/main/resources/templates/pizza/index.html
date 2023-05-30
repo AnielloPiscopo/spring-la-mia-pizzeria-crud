@@ -4,52 +4,9 @@
 
   <body>
     <main>
-      <div class="my_container">
-        <h1>Lista pizze</h1>
-        <form method="POST">
-          <input type="text" name="name" />
-          <button type="submit">Filtra</button>
-        </form>
-        <div class="my_btn-container">
-          <a th:href="@{/pizzas/create}">Create new pizza</a>
-        </div>
-      </div>
-      <table th:unless="${pizzas.isEmpty()}">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Nome</th>
-            <th>Descrizione</th>
-            <th>Img_Url</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr th:each="pizza : ${pizzas}" th:object="${pizza}">
-            <td scope="row">
-              <span>[[*{id}]]</span>
-            </td>
-            <td>
-              <span>[[*{name}]]</span>
-            </td>
-            <td>
-              <span>[[*{description}]]</span>
-            </td>
-            <td>
-              <span>[[*{imgUrl}]]</span>
-            </td>
-            <td>
-              <span>[[*{price}]] $</span>
-            </td>
-            <td>
-              <a th:href="@{/pizzas/{id} (id=${pizza.id})}">Show</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div th:if="${pizzas.isEmpty()}">Non ci sono elementi nella tabella</div>
+      <th:block
+        th:replace="~{pizza/frag/table-layout :: table(true , ${pizzas})}"
+      ></th:block>
     </main>
   </body>
 </html>

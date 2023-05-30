@@ -25,6 +25,8 @@ public class Pizza {
 	@Nonnull
 	private float price;
 	
+	private boolean deleted = false;
+	
 	public Pizza(){}
 
 	public Pizza(String name, String description, String imgUrl, float price) {
@@ -74,6 +76,14 @@ public class Pizza {
 		this.price = price;
 	}
 	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	private String getInfo() {
 		return "Id: " + getId()
 			+ "\n" + "Name: " + getName()

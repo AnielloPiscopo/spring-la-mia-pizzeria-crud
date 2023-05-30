@@ -1,19 +1,19 @@
 <form
   method="POST"
-  th:fragment="form(btnText , pizza)"
-  th:action="@{/pizzas/create}"
+  th:fragment="form(create , btnText , pizza)"
+  th:action="${create} ? @{/pizzas/create} : @{/pizzas/edit/{id} (id=${pizza.id})}"
   th:object="${pizza}"
 >
   <input
     type="text"
     name="name"
-    th:field="*{name}"
+    th:value="*{name}"
     placeholder="Inserisci nome"
     modelAttribute="pizza"
   />
   <textarea
     name="description"
-    th:field="*{description}"
+    th:value="*{description}"
     id=""
     cols="30"
     rows="10"
@@ -22,13 +22,13 @@
   <input
     type="text"
     name="imgUrl"
-    th:field="*{imgUrl}"
+    th:value="*{imgUrl}"
     placeholder="Inserisci l'url dell'immagine"
   />
   <input
     type="number"
     name="price"
-    th:field="*{price}"
+    th:value="*{price}"
     placeholder="Inserisci il prezzo"
     step="0.01"
   />

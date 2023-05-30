@@ -20,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PizzaController {
 	private static String pageTitle;
 	
-	private String getPizzas(List<Pizza> pizzas , Model model) {
-		pageTitle = "Lista pizze";
+	private String getPizzas(List<Pizza> pizzas , String title , String template , Model model) {
 		model.addAttribute("pizzas" , pizzas);
-		model.addAttribute("title" , pageTitle);
-		return "pizza/index";
+		model.addAttribute("title" , title);
+		return template;
 	}
 	
 	@Autowired
@@ -32,14 +31,14 @@ public class PizzaController {
 	
 	@GetMapping("/")
 	public String index(Model model ) {
-		List<Pizza> pizzas = pizzaService.findAll();
-		return getPizzas(pizzas, model);
+		List<Pizza> pizzas = pizzaService.findAllAvailablePizzas();
+		return getPizzas(pizzas , "Lista pizze" , "pizza/index" , model);
 	}
 	
 	@PostMapping("/")
 	public String index(Model model , @RequestParam(name = "name") String name) {
-		List<Pizza> pizzas = pizzaService.findByNameContaining(name);
-		return getPizzas(pizzas, model);
+		List<Pizza> pizzas = pizzaService.filterByNameForAvailablePizzas(name);
+		return getPizzas(pizzas , "Lista pizze" , "pizza/index" , model);
 	}
 	
 	@GetMapping("/{id}")
@@ -64,8 +63,91 @@ public class PizzaController {
 	}
 	
 	@PostMapping("/create")
-	public String store(@ModelAttribute("pizza") Pizza pizza , Model model) {
+	public String store(@ModelAttribute("pizza") Pizza pizza) {
 		pizzaService.save(pizza);
 		return "redirect:/pizzas/";
+	}
+	
+	@GetMapping("/edit/{id}")
+	public String edit(Model model , @PathVariable("id") int id) {
+		Optional<Pizza> optPizza = pizzaService.findById(id);
+		Pizza pizza = optPizza.get();
+		String btnText = "Modifica elemento";
+		model.addAttribute("btnText" , btnText);
+		pageTitle = "Modifica la pizza: " + pizza.getName();
+		model.addAttribute("pizza" , pizza);
+		model.addAttribute("title" , pageTitle);
+		return "pizza/edit";
+	}
+	
+	@PostMapping("/edit/{id}")
+	public String update(@ModelAttribute("pizza") Pizza pizza) {
+		pizzaService.save(pizza);
+		return "redirect:/pizzas/" + pizza.getId();
+	}
+	
+	@PostMapping("/soft-delete/{id}")
+	public String softDelete(@PathVariable("id") int id) {
+		Optional<Pizza> optPizza = pizzaService.findById(id);
+		Pizza pizza = optPizza.get();
+		pizza.setDeleted(true);
+		pizzaService.save(pizza);
+		return "redirect:/pizzas/";
+	}
+	
+	@PostMapping("/soft-delete-all")
+	public String softDeleteAll() {
+		List<Pizza> pizzas = pizzaService.findAllAvailablePizzas();
+		for(Pizza pizza : pizzas) {
+			pizza.setDeleted(true);
+			pizzaService.save(pizza);
+		}
+		return "redirect:/pizzas/";
+	}
+	
+	@GetMapping("/trash")
+	public String trash(Model model ) {
+		List<Pizza> pizzas = pizzaService.findAllTrashedPizzas();
+		return getPizzas(pizzas , "Lista pizze cestinate" , "pizza/trash" , model);
+	}
+	
+	@PostMapping("/trash")
+	public String trash(Model model , @RequestParam(name = "name") String name) {
+		List<Pizza> pizzas = pizzaService.filterByNameForTrashedPizzas(name);
+		return getPizzas(pizzas , "Lista pizze cestinate" , "pizza/trash" , model);
+	}
+	
+	@PostMapping("/refresh/{id}")
+	public String refresh(@PathVariable("id") int id) {
+		Optional<Pizza> optPizza = pizzaService.findById(id);
+		Pizza pizza = optPizza.get();
+		pizza.setDeleted(false);
+		pizzaService.save(pizza);
+		return "redirect:/pizzas/trash";
+	}
+	
+	@PostMapping("/refresh-all")
+	public String refreshAll() {
+		List<Pizza> pizzas = pizzaService.findAllTrashedPizzas();
+		for(Pizza pizza : pizzas) {
+			pizza.setDeleted(false);
+			pizzaService.save(pizza);
+		}
+		return "redirect:/pizzas/trash";
+	}
+	
+	@PostMapping("/delete/{id}")
+	public String delete(@PathVariable("id") int id) {
+		Optional<Pizza> optPizza = pizzaService.findById(id);
+		Pizza pizza = optPizza.get();
+		pizzaService.delete(pizza);
+		return "redirect:/pizzas/trash";
+	}
+	
+	@PostMapping("/delete-all")
+	public String deleteAll() {
+		List<Pizza> pizzas = pizzaService.findAllTrashedPizzas();
+		pizzaService.deleteAll(pizzas);
+		return "redirect:/pizzas/trash";
 	}
 }

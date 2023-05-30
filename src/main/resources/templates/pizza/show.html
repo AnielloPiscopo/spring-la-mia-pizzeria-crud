@@ -7,7 +7,9 @@
       <h1>[[*{name}]]</h1>
       <img th:src="@{imgUrl}" alt="Immagine a caso" />
       <p>[[*{description}]]</p>
-      <span>[[*{price}]]$</span>
+      <div>[[*{price}]]$</div>
+
+      <a th:href="@{/pizzas/}">Go to index</a>
     </main>
   </body>
 </html>

@@ -17,6 +17,14 @@ public class PizzaService {
 			return pizzaRepo.findAll();
 	}
 	
+	public List<Pizza> findAllAvailablePizzas() {
+		return pizzaRepo.findByDeletedFalse();
+	}
+	
+	public List<Pizza> findAllTrashedPizzas() {
+		return pizzaRepo.findByDeletedTrue();
+	}
+	
 	public Pizza save(Pizza pizza) {
 		return pizzaRepo.save(pizza);
 	}
@@ -25,7 +33,23 @@ public class PizzaService {
 		return pizzaRepo.findById(id);
 	}
 	
-	public List<Pizza> findByNameContaining(String name) {
+	public List<Pizza> filterByName(String name) {
 		return pizzaRepo.findByNameContaining(name);
+	}
+	
+	public List<Pizza> filterByNameForAvailablePizzas(String name) {
+		return pizzaRepo.findByNameContainingAndDeletedFalse(name);
+	}
+	
+	public List<Pizza> filterByNameForTrashedPizzas(String name) {
+		return pizzaRepo.findByNameContainingAndDeletedTrue(name);
+	}
+	
+	public void delete(Pizza pizza) {
+		pizzaRepo.delete(pizza);
+	}
+	
+	public void deleteAll(List<Pizza> pizzas) {
+		pizzaRepo.deleteAll(pizzas);
 	}
 }
